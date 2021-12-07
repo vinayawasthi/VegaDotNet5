@@ -41,10 +41,23 @@ namespace Vega.Web.Controllers
 
         [HttpGet("")]
         [HttpGet("list")]
-        public async Task<IEnumerable<VehicleResource>> GetVehicles()
+        public async Task<QueryResult<IList<VehicleResource>>> GetVehicles()
         {
-            var vahicles = await this.vehicleRepository.GetAllVehicleAsync();
-            return this.mapper.Map<IList<Vehicle>, IList<VehicleResource>>(vahicles);
+            var vahicles = await this.vehicleRepository.GetAllVehicleAsync(new BaseFilterQuery()
+            {
+                SortBy = "",
+                IsSortAscending = true,
+                PageIndex = 1,
+                PageSize = 1
+            });
+
+            QueryResult<IList<VehicleResource>> result =new QueryResult<IList<VehicleResource>>()
+            {
+                TotalItems = vahicles.TotalItems,
+                Items = this.mapper.Map<IList<Vehicle>, IList<VehicleResource>>(vahicles.Items)
+            };
+            
+            return result;
         }
 
         [HttpGet("{id}")]
@@ -97,7 +110,7 @@ namespace Vega.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await this.vehicleRepository.GetVehicleAsync(id, true ,true);
+            var vehicle = await this.vehicleRepository.GetVehicleAsync(id, true, true);
             if (vehicle == null)
                 return NotFound();
 
@@ -118,7 +131,7 @@ namespace Vega.Web.Controllers
                 return NotFound();
 
             this.vehicleRepository.RemoveVehicle(vehicle);
-            
+
             await this.unitOfWork.CompleteAsync();
 
             return Ok(id);
