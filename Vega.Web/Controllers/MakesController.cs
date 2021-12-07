@@ -14,35 +14,42 @@ namespace Vega.Web.Controllers
     [ApiController]
     public class MakesController : ControllerBase
     {
-        private readonly AppDbContext appDbContext;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IMakeRepository makeRepository;
+        private readonly IModelRepository modelRepository;
 
-        public MakesController(AppDbContext appDbContext, IMapper mapper)
+        public MakesController(IUnitOfWork unitOfWork, IMapper mapper
+        , IMakeRepository makeRepository
+        , IModelRepository modelRepository
+        )
         {
-            this.appDbContext = appDbContext;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.makeRepository = makeRepository;
+            this.modelRepository = modelRepository;
         }
 
         [HttpGet("")]
         [HttpGet("list")]
         public async Task<IEnumerable<MakeResource>> GetMakes()
         {
-            var makes = await appDbContext.Makes.Include(x=>x.Models).ToListAsync();
-            return mapper.Map<List<Make>, List<MakeResource>>(makes);
+            var makes = await this.makeRepository.GetAllMakeAsync();
+            return mapper.Map<IList<Make>, IList<MakeResource>>(makes);
         }
 
         [HttpGet("{makeId}")]
         public async Task<MakeResource> GetMake(int makeId)
         {
-            var make = await appDbContext.Makes.Where(x => x.Id == makeId).Include(x => x.Models).FirstOrDefaultAsync();
+            var make = await this.makeRepository.GetMakeAsync(makeId,true);
             return mapper.Map<Make, MakeResource>(make);
         }
 
         [HttpGet("{makeId}/models")]       
         public async Task<IEnumerable<ModelResource>> GetModelsByMakeId(int makeId)
         {
-            var models = await appDbContext.Models.Where(x=> x.MakeId == makeId).ToListAsync();
-            return mapper.Map<List<Model>, List<ModelResource>>(models);
+            var models = await this.modelRepository.GetAllModelByMakeIdAsync(makeId);
+            return mapper.Map<IList<Model>, IList<ModelResource>>(models);
         }
     }
 }

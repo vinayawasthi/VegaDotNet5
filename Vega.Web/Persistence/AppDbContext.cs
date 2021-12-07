@@ -23,14 +23,19 @@ namespace Vega.Web.Persistence
         public DbSet<VehicleFeature> VehicleFeatures { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {            
-            //IConfigurationRoot configuration = new ConfigurationBuilder()
-            //                                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            //                                    .AddJsonFile("appsettings.json")
-            //                                    .Build();
-            
-            //optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection"), mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 5, 0), ServerType.MariaDb));
-            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                                                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                                                .AddJsonFile("appsettings.json", true, reloadOnChange: true)
+                                                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true, reloadOnChange: true)
+                                                .Build();
+
+                optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection"), mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 5, 0), ServerType.MariaDb));
+                //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,9 +43,9 @@ namespace Vega.Web.Persistence
             modelBuilder.Entity<Make>().Property(m => m.Name).HasMaxLength(500).IsRequired();
             modelBuilder.Entity<Model>().Property(m => m.Name).HasMaxLength(500).IsRequired();
             modelBuilder.Entity<Model>().Property(m => m.MakeId).IsRequired();
-            
+
             modelBuilder.Entity<Feature>().Property(p => p.Name).HasMaxLength(255).IsRequired();
-            
+
             modelBuilder.Entity<Vehicle>().Property(p => p.IsRegistered).IsRequired();
             modelBuilder.Entity<Vehicle>().Property(p => p.LastUpdate).IsRequired();
             modelBuilder.Entity<Vehicle>().Property(p => p.PersonName).HasMaxLength(255).IsRequired();
