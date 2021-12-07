@@ -40,6 +40,7 @@ namespace Vega.Web.ApiResources
         public VehicleResource()
         {
             Features = new Collection<int>();
+            Person = new Person();
         }
 
         public int Id { get; set; }

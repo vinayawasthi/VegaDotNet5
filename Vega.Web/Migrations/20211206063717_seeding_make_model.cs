@@ -9,14 +9,14 @@ namespace Vega.Web.Migrations
         {            
             for (int i = 1; i <= 100; i++)
             {
-                migrationBuilder.Sql(string.Format("INSERT INTO makes (Name) VALUES ('Make{0}')", i));
+                migrationBuilder.Sql(string.Format("INSERT INTO Makes (Name) VALUES ('Make{0}')", i));
             }
 
             for (int i = 1; i <= 100; i++)
             {                
-                migrationBuilder.Sql(string.Format("INSERT INTO models (Name, MakeId) VALUES ('Make{0}-ModelA', (SELECT Id FROM makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
-                migrationBuilder.Sql(string.Format("INSERT INTO models (Name, MakeId) VALUES ('Make{0}-ModelB', (SELECT Id FROM makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
-                migrationBuilder.Sql(string.Format("INSERT INTO models (Name, MakeId) VALUES ('Make{0}-ModelC', (SELECT Id FROM makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
+                migrationBuilder.Sql(string.Format("INSERT INTO Models (Name, MakeId) VALUES ('Make{0}-ModelA', (SELECT Id FROM Makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
+                migrationBuilder.Sql(string.Format("INSERT INTO Models (Name, MakeId) VALUES ('Make{0}-ModelB', (SELECT Id FROM Makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
+                migrationBuilder.Sql(string.Format("INSERT INTO Models (Name, MakeId) VALUES ('Make{0}-ModelC', (SELECT Id FROM Makes WHERE Name = 'Make{0}' LIMIT 1 OFFSET 0))", i));
             }            
         }
 

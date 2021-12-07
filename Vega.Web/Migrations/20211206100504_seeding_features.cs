@@ -8,13 +8,13 @@ namespace Vega.Web.Migrations
         {
             for (int i = 1; i <= 20; i++)
             {
-                migrationBuilder.Sql(string.Format("INSERT INTO features (Name) VALUES ('Feature{0}')", i));
+                migrationBuilder.Sql(string.Format("INSERT INTO Features (Name) VALUES ('Feature{0}')", i));
             }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DELETE FROM features WHERE Name like 'Feature%'");
+            migrationBuilder.Sql("DELETE FROM Features WHERE Name like 'Feature%'");
         }
     }
 }

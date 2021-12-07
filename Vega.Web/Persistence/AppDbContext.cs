@@ -13,7 +13,7 @@ namespace Vega.Web.Persistence
         {
             this.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             this.ChangeTracker.LazyLoadingEnabled = false;
-            this.ChangeTracker.AutoDetectChangesEnabled = false;          
+            //this.ChangeTracker.AutoDetectChangesEnabled = false;          
         }
 
         public DbSet<Model> Models { get; set; }
