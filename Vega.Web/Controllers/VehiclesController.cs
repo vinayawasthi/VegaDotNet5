@@ -33,9 +33,15 @@ namespace Vega.Web.Controllers
             return this.mapper.Map<List<Vehicle>, List<VehicleResource>>(vahicles);
         }
 
-        [HttpGet("{id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id){
-            var vehicle = await this.appDbContext.Vehicles.Include(x=>x.Features).Where(x=>x.Id==id).SingleOrDefaultAsync();
+            var vehicle = await this.appDbContext.Vehicles
+            .Include(x=>x.Model)
+                .ThenInclude(x=> x.Make)
+            .Include(x=>x.Features)
+                .ThenInclude(vf=> vf.Feature)
+            .Where(x=>x.Id==id)
+            .SingleOrDefaultAsync();
             
             if(vehicle==null)
                 return NotFound("No vehicle found");

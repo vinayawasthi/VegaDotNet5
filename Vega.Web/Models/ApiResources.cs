@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace Vega.Web.ApiResources
 {
+    public class KeyValuePairResource
+    {
+        public KeyValuePairResource()
+        {
+
+        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class ModelResource
     {
         public ModelResource()
@@ -61,7 +72,7 @@ namespace Vega.Web.ApiResources
     {
         public VehicleResource()
         {
-            Features = new Collection<FeatureResource>();
+            Features = new Collection<KeyValuePairResource>();
             Person = new Person();
         }
 
@@ -70,9 +81,8 @@ namespace Vega.Web.ApiResources
         public bool IsRegistered { get; set; }
         public DateTime LastUpdate { get; set; }
 
-
-        public ModelResource Model { get; set; }
-        public MakeResource Make { get; set; }
-        public ICollection<FeatureResource> Features { get; set; }
+        public KeyValuePairResource Model { get; set; }
+        public KeyValuePairResource Make { get; set; }
+        public ICollection<KeyValuePairResource> Features { get; set; }
     }
 }
