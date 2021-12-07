@@ -14,7 +14,7 @@ namespace Vega.Web.ApiResources
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }        
+        public string Name { get; set; }
     }
 
     public class MakeResource
@@ -35,9 +35,9 @@ namespace Vega.Web.ApiResources
         public string Name { get; set; }
     }
 
-    public class VehicleResource
+    public class SaveVehicleResource
     {
-        public VehicleResource()
+        public SaveVehicleResource()
         {
             Features = new Collection<int>();
             Person = new Person();
@@ -55,5 +55,24 @@ namespace Vega.Web.ApiResources
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+    }
+
+    public class VehicleResource
+    {
+        public VehicleResource()
+        {
+            Features = new Collection<FeatureResource>();
+            Person = new Person();
+        }
+
+        public int Id { get; set; }
+        public Person Person { get; set; }
+        public bool IsRegistered { get; set; }
+        public DateTime LastUpdate { get; set; }
+
+
+        public ModelResource Model { get; set; }
+        public MakeResource Make { get; set; }
+        public ICollection<FeatureResource> Features { get; set; }
     }
 }

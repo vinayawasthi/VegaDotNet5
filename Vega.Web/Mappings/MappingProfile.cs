@@ -14,15 +14,27 @@ namespace Vega.Web.Mappings
         {
             // Domain to API Resource
             CreateMap<Make, MakeResource>();
+            
             CreateMap<Model, ModelResource>();
+            
             CreateMap<Feature, FeatureResource>();
+            
             CreateMap<Vehicle, VehicleResource>()
+            .ForMember(v => v.Person, o => o.MapFrom(x => new Person() { Name = x.PersonName, Email = x.PersonEmail, Phone = x.PersonPhone }))
+            .ForMember(v=> v.Model, o=> o.MapFrom(x=> x.Model))
+            .ForMember(v=> v.Make, o=> o.MapFrom(x=> x.Model.Make))
+            .ForMember(v=> v.Features, o=> o.MapFrom(x=> 
+                    x.Features.Select(y=> new FeatureResource(){ 
+                        Id = y.FeatureId, Name=y.Feature.Name
+                    })));
+            
+            CreateMap<Vehicle, SaveVehicleResource>()
                 .ForMember(v => v.Person, o => o.MapFrom(x => new Person() { Name = x.PersonName, Email = x.PersonEmail, Phone = x.PersonPhone }))
                 .ForMember(v => v.Features, o => o.MapFrom(x => x.Features.Select(x => x.FeatureId)));
 
 
             // API Resource to Domain
-            CreateMap<VehicleResource, Vehicle>()
+            CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.PersonName, o => o.MapFrom(x => x.Person.Name))
                 .ForMember(v => v.PersonEmail, o => o.MapFrom(x => x.Person.Email))
                 .ForMember(v => v.PersonPhone, o => o.MapFrom(x => x.Person.Phone))

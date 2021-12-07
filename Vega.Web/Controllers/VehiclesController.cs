@@ -45,7 +45,7 @@ namespace Vega.Web.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreateVehicles([FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> CreateVehicles([FromBody] SaveVehicleResource vehicleResource)
         {
             if(!ModelState.IsValid)
                return BadRequest(ModelState);
@@ -56,18 +56,18 @@ namespace Vega.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var vehicle = this.mapper.Map<VehicleResource, Vehicle>(vehicleResource);
+            var vehicle = this.mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate = DateTime.UtcNow;
             this.appDbContext.Add(vehicle);
             await this.appDbContext.SaveChangesAsync();
 
             vehicle = await this.appDbContext.Vehicles.Where(x => x.Id == vehicle.Id).FirstAsync();
-            var result = this.mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = this.mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVehicles(int id,[FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> UpdateVehicles(int id,[FromBody] SaveVehicleResource vehicleResource)
         {
             if(!ModelState.IsValid)
                return BadRequest(ModelState);
@@ -82,12 +82,12 @@ namespace Vega.Web.Controllers
             if(vehicle==null)
                 return NotFound();
                 
-            vehicle = this.mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
+            vehicle = this.mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.UtcNow;
             this.appDbContext.ChangeTracker.DetectChanges();
             await this.appDbContext.SaveChangesAsync();
 
-            var result = this.mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = this.mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
 
@@ -100,7 +100,7 @@ namespace Vega.Web.Controllers
                 return NotFound();
 
             this.appDbContext.Remove(vehicle);
-            await this.appDbContext.SaveChanges();
+            this.appDbContext.SaveChanges();
             return Ok(id);
         }
     }
