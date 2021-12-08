@@ -25,11 +25,11 @@ namespace Vega.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+
             services.AddDbContext<AppDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), mySqlOptions => mySqlOptions.ServerVersion(new Version(10, 5, 0), ServerType.MariaDb)));
             //services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
-            services.AddScoped<IUnitOfWork,UnitOfWOrk>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWOrk>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IMakeRepository, MakeRepository>();
             services.AddScoped<IModelRepository, ModelRepository>();

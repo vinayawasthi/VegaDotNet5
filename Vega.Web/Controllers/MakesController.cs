@@ -41,11 +41,11 @@ namespace Vega.Web.Controllers
         [HttpGet("{makeId}")]
         public async Task<MakeResource> GetMake(int makeId)
         {
-            var make = await this.makeRepository.GetMakeAsync(makeId,true);
+            var make = await this.makeRepository.GetMakeAsync(makeId, true);
             return mapper.Map<Make, MakeResource>(make);
         }
 
-        [HttpGet("{makeId}/models")]       
+        [HttpGet("{makeId}/models")]
         public async Task<IEnumerable<ModelResource>> GetModelsByMakeId(int makeId)
         {
             var models = await this.modelRepository.GetAllModelByMakeIdAsync(makeId);

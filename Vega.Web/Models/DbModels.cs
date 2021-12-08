@@ -4,14 +4,15 @@ using System.Collections.ObjectModel;
 
 namespace Vega.Web.Models
 {
-    public class Model {
+    public class Model
+    {
         public Model()
         {
 
         }
 
         public int Id { get; set; }
-        public string Name { get; set; } 
+        public string Name { get; set; }
         public int MakeId { get; set; }
 
         public Make Make { get; set; }
@@ -26,7 +27,7 @@ namespace Vega.Web.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Model> Models { get; set; }        
+        public ICollection<Model> Models { get; set; }
     }
 
     public class Feature
@@ -36,7 +37,7 @@ namespace Vega.Web.Models
             Vehicles = new Collection<VehicleFeature>();
         }
 
-        public int Id { get; set; }        
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public ICollection<VehicleFeature> Vehicles { get; set; }
@@ -54,7 +55,7 @@ namespace Vega.Web.Models
         public string PersonName { get; set; }
         public string PersonEmail { get; set; }
         public string PersonPhone { get; set; }
-        public bool IsRegistered { get; set; }             
+        public bool IsRegistered { get; set; }
         public DateTime LastUpdate { get; set; }
 
         public Model Model { get; set; }

@@ -17,7 +17,7 @@ namespace Vega.Web
             .ConfigureAppConfiguration((hostingContext, config) =>
             {
                 config.AddJsonFile("appsettings.json", true, reloadOnChange: true);
-                config.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true, reloadOnChange: true);             
+                config.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true, reloadOnChange: true);
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

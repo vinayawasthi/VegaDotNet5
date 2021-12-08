@@ -26,11 +26,13 @@ namespace Vega.Web.Extentions
             //     throw new Exception("page index should be greater than or equal to 1");
             // if(pageSize <= 0 )
             //     throw new Exception("page size should be greater than or equal to 1");
-            
+
             if (pageIndex > 0 && pageSize > 0)
             {
                 return query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-            }else{
+            }
+            else
+            {
                 return query.Take(100);
             }
         }

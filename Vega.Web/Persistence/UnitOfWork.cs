@@ -15,7 +15,8 @@ namespace Vega.Web.Persistence
     {
         private readonly AppDbContext dbContext;
 
-        public UnitOfWOrk(AppDbContext dbContext){
+        public UnitOfWOrk(AppDbContext dbContext)
+        {
             this.dbContext = dbContext;
         }
         public async Task<int> CompleteAsync()

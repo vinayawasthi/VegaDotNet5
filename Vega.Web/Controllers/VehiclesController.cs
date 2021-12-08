@@ -51,12 +51,12 @@ namespace Vega.Web.Controllers
                 PageSize = 1
             });
 
-            QueryResult<IList<VehicleResource>> result =new QueryResult<IList<VehicleResource>>()
+            QueryResult<IList<VehicleResource>> result = new QueryResult<IList<VehicleResource>>()
             {
                 TotalItems = vahicles.TotalItems,
                 Items = this.mapper.Map<IList<Vehicle>, IList<VehicleResource>>(vahicles.Items)
             };
-            
+
             return result;
         }
 

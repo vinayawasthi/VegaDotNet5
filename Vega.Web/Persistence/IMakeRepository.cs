@@ -9,8 +9,8 @@ namespace Vega.Web.Persistence
 {
     public interface IMakeRepository
     {
-        Task<IList<Make>> GetAllMakeAsync(bool includeRelated=true);
+        Task<IList<Make>> GetAllMakeAsync(bool includeRelated = true);
 
-        Task<Make> GetMakeAsync(int id,bool includeRelated=true, bool track = false);
+        Task<Make> GetMakeAsync(int id, bool includeRelated = true, bool track = false);
     }
 }
