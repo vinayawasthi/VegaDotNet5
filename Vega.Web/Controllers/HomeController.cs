@@ -16,6 +16,7 @@ namespace Vega.Web.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            Console.WriteLine($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json");
         }
 
         public IActionResult Index()

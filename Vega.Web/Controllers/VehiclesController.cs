@@ -14,6 +14,7 @@ namespace Vega.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class VehiclesController : ControllerBase
     {
         private readonly IMapper mapper;
@@ -24,12 +25,13 @@ namespace Vega.Web.Controllers
         private readonly IVehicleRepository vehicleRepository;
 
         public VehiclesController(
+            IMapper mapper,
+            IUnitOfWork unitOfWork,
             IVehicleRepository vehicleRepository,
             IMakeRepository makeRepository,
             IModelRepository modelRepository,
-            IFeatureRespository featureRespository,
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IFeatureRespository featureRespository            
+           )
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
@@ -43,7 +45,7 @@ namespace Vega.Web.Controllers
         [HttpGet("list")]
         public async Task<QueryResult<IList<VehicleResource>>> GetVehicles()
         {
-            var vahicles = await this.vehicleRepository.GetAllVehicleAsync(new BaseFilterQuery()
+            var vahicles = await vehicleRepository.GetVehiclesAsync(new BaseFilterQuery()
             {
                 SortBy = "",
                 IsSortAscending = true,
@@ -54,7 +56,7 @@ namespace Vega.Web.Controllers
             QueryResult<IList<VehicleResource>> result = new QueryResult<IList<VehicleResource>>()
             {
                 TotalItems = vahicles.TotalItems,
-                Items = this.mapper.Map<IList<Vehicle>, IList<VehicleResource>>(vahicles.Items)
+                Items = mapper.Map<IList<Vehicle>, IList<VehicleResource>>(vahicles.Items)
             };
 
             return result;
@@ -63,12 +65,12 @@ namespace Vega.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await this.vehicleRepository.GetVehicleAsync(id);
+            var vehicle = await vehicleRepository.GetVehicleAsync(id);
 
             if (vehicle == null)
                 return NotFound("No vehicle found");
 
-            var result = this.mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
         }
 
@@ -79,21 +81,21 @@ namespace Vega.Web.Controllers
                 return BadRequest(ModelState);
 
 
-            var model = await this.modelRepository.GetModelAsync(vehicleResource.ModelId);
+            var model = await modelRepository.GetModelAsync(vehicleResource.ModelId);
             if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid Model Id");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = this.mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
+            var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate = DateTime.UtcNow;
-            this.vehicleRepository.AddVehicle(vehicle);
-            await this.unitOfWork.CompleteAsync();
+            vehicleRepository.AddVehicle(vehicle);
+            await unitOfWork.CompleteAsync();
 
-            vehicle = await this.vehicleRepository.GetVehicleAsync(vehicle.Id, true, false);
+            vehicle = await vehicleRepository.GetVehicleAsync(vehicle.Id, true, false);
 
-            var result = this.mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
+            var result = mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
 
@@ -103,36 +105,36 @@ namespace Vega.Web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var model = await this.modelRepository.GetModelAsync(vehicleResource.ModelId);
+            var model = await modelRepository.GetModelAsync(vehicleResource.ModelId);
             if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid Model Id");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await this.vehicleRepository.GetVehicleAsync(id, true, true);
+            var vehicle = await vehicleRepository.GetVehicleAsync(id, true, true);
             if (vehicle == null)
                 return NotFound();
 
-            vehicle = this.mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
+            vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.UtcNow;
-            await this.unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync();
 
-            var result = this.mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
+            var result = mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicles(int id)
         {
-            var vehicle = await this.vehicleRepository.GetVehicleAsync(id, false, true);
+            var vehicle = await vehicleRepository.GetVehicleAsync(id, false, true);
 
             if (vehicle == null)
                 return NotFound();
 
-            this.vehicleRepository.RemoveVehicle(vehicle);
+            vehicleRepository.RemoveVehicle(vehicle);
 
-            await this.unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync();
 
             return Ok(id);
         }

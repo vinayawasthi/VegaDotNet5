@@ -1,14 +1,11 @@
-
-using Vega.Web.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections;
-using Vega.Web.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Vega.Web.Extentions;
+using Vega.Web.Models;
 
 namespace Vega.Web.Persistence
 {
@@ -21,7 +18,7 @@ namespace Vega.Web.Persistence
             this.dbContext = dbContext;
         }
 
-        protected IQueryable<Vehicle> GetVehicles(BaseFilterQuery filterQuery, bool includeRelated = true)
+        protected IQueryable<Vehicle> FindVehicle(BaseFilterQuery filterQuery, bool includeRelated = true)
         {
             IQueryable<Vehicle> query;
             if (!includeRelated)
@@ -53,9 +50,9 @@ namespace Vega.Web.Persistence
             return query;
         }
 
-        public async Task<QueryResult<IList<Vehicle>>> GetAllVehicleAsync(BaseFilterQuery filterQuery, bool includeRelated = true)
+        public async Task<QueryResult<IList<Vehicle>>> GetVehiclesAsync(BaseFilterQuery filterQuery, bool includeRelated = true)
         {
-            var query = this.GetVehicles(filterQuery, includeRelated);
+            var query = FindVehicle(filterQuery, includeRelated);
 
             QueryResult<IList<Vehicle>> result = new QueryResult<IList<Vehicle>>()
             {
@@ -68,8 +65,14 @@ namespace Vega.Web.Persistence
 
         public async Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true, bool track = false)
         {
-            var query = track ? this.GetVehicles(null, includeRelated).AsTracking() : this.GetVehicles(null, includeRelated);
-            return await query.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var query = includeRelated ? FindVehicle(null, includeRelated) : FindVehicle(null);
+            
+            query = query.Where(x => x.Id == id);
+            
+            if (track)
+                query = query.AsTracking();
+            
+            return await query.SingleOrDefaultAsync();
         }
 
         public void AddVehicle(Vehicle vehicle)
