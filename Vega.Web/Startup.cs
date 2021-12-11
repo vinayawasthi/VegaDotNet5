@@ -35,6 +35,7 @@ namespace Vega.Web
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IFeatureRespository, FeatureRespository>();
 
+            services.AddCors();
             services.AddControllers().AddNewtonsoftJson((opt =>
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -66,6 +67,11 @@ namespace Vega.Web
             }
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCors(builder =>{
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

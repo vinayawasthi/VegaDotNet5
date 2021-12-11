@@ -36,6 +36,8 @@ namespace Vega.Web.Controllers
             this.modelRepository = modelRepository;
             this.featureRespository = featureRespository;
             this.vehicleRepository = vehicleRepository;
+
+            System.Threading.Thread.Sleep(5000);
         }
 
         [HttpGet("")]
@@ -47,7 +49,7 @@ namespace Vega.Web.Controllers
                 SortBy = "",
                 IsSortAscending = true,
                 PageIndex = 1,
-                PageSize = 1
+                PageSize = 100
             });
 
             QueryResult<IList<VehicleResource>> result = new QueryResult<IList<VehicleResource>>()
