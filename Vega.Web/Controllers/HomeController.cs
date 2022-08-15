@@ -21,6 +21,7 @@ namespace Vega.Web.Controllers
 
         public IActionResult Index()
         {
+            //Sample
             return View();
         }
 
